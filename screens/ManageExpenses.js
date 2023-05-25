@@ -1,9 +1,10 @@
 import { useContext, useLayoutEffect } from "react";
-import { StyleSheet, View } from "react-native"
+import { StyleSheet, TextInput, View } from "react-native"
 import { GlobalStyle } from "../constants/styles";
 import IconButton from "../components/UI/IconButton";
-import Button from "../components/UI/Button";
+
 import { ExpensesContext } from "../store/expenses-context";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
 const ManageExpenses = ({route, navigation}) =>{
     const expenseCtx = useContext(ExpensesContext);
@@ -34,10 +35,7 @@ const ManageExpenses = ({route, navigation}) =>{
     
     return (
         <View style={styles.container}>
-            <View style={styles.buttonContainer}>
-                <Button mode="flat" style={styles.button} onPress={cancelHandler}>Cancel</Button>
-                <Button style={styles.button} onPress={confirmHandler}>{isEditing ? "Update" : "Add"}</Button>
-            </View>
+            <ExpenseForm submitButtonLabel={isEditing ? 'Update' : 'Add'} cancelHandler={cancelHandler} confirmHandler={confirmHandler}/>
             {isEditing && (
                 <View style={styles.deleteContainer}>
                     <IconButton icon="trash" color={GlobalStyle.colors.error50} size={36} onPress={deleteExpenseHandler}/>
@@ -59,15 +57,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 2,
         borderTopColor: GlobalStyle.colors.primary200,
         alignItems: 'center'
-    },
-    buttonContainer:{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    button:{
-        minWidth: 120,
-        marginHorizontal: 8
     }
 })
 
