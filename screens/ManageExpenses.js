@@ -10,6 +10,7 @@ const ManageExpenses = ({route, navigation}) =>{
     const expenseCtx = useContext(ExpensesContext);
     const expenseId = route.params?.expenseId;
     const isEditing = !!expenseId;
+    const selectedExpense = expenseCtx.expenses.find(expense => expense.id === expenseId);
 
     const deleteExpenseHandler = () => {
         expenseCtx.deleteExpense(expenseId)
@@ -18,11 +19,11 @@ const ManageExpenses = ({route, navigation}) =>{
     const cancelHandler = () => {
         navigation.goBack();
     }
-    const confirmHandler = () => {
+    const confirmHandler = (expenseData) => {
         if(isEditing){
-            expenseCtx.updateExpense(expenseId, {description: "Test 1", amount: 10.55, date: new Date()})
+            expenseCtx.updateExpense(expenseId, expenseData)
         } else{
-            expenseCtx.addExpense({description: "Test 1", amount: 10.55, date: new Date()});
+            expenseCtx.addExpense(expenseData);
         }
         navigation.goBack();
     }
@@ -35,7 +36,12 @@ const ManageExpenses = ({route, navigation}) =>{
     
     return (
         <View style={styles.container}>
-            <ExpenseForm submitButtonLabel={isEditing ? 'Update' : 'Add'} cancelHandler={cancelHandler} confirmHandler={confirmHandler}/>
+            <ExpenseForm 
+            submitButtonLabel={isEditing ? 'Update' : 'Add'} 
+            cancelHandler={cancelHandler} 
+            confirmHandler={confirmHandler}
+            defaultValues={selectedExpense}
+            />
             {isEditing && (
                 <View style={styles.deleteContainer}>
                     <IconButton icon="trash" color={GlobalStyle.colors.error50} size={36} onPress={deleteExpenseHandler}/>
